@@ -12,7 +12,7 @@ export default function DonateBooksPage() {
   const [userData, setUserData] = useState({
     fullName: "",
   });
-  const [isEditing, setIsEditing] = useState(false);
+  // const [isEditing, setIsEditing] = useState(false);
   const navigate = useNavigate();
   const [form, setForm] = useState({
     title: '',
@@ -32,6 +32,7 @@ export default function DonateBooksPage() {
   const [zoom, setZoom] = useState(1);
   const [cropImage, setCropImage] = useState(null);
   const [isCropping, setIsCropping] = useState(false);
+
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
@@ -46,26 +47,20 @@ export default function DonateBooksPage() {
       pendingRequests: 0,
       rewardsEarned: 0
     };
-    
     localStorage.setItem('dashboardStats', JSON.stringify({
       ...currentStats,
       donatedBooks: currentStats.donatedBooks + quantity,
     }));
-    
     // Trigger storage event for other tabs
     window.dispatchEvent(new Event('storage'));
   };
 
   const saveDonationDate = () => {
     const today = new Date();
-    const todayUTC = new Date(Date.UTC(
-      today.getUTCFullYear(), 
-      today.getUTCMonth(), 
-      today.getUTCDate()
-    ));
+
     const dateStr = today.toISOString().split('T')[0]; // Format: YYYY-MM-DD
     const existingDates = JSON.parse(localStorage.getItem('donationDates')) || [];
-    
+
     if (!existingDates.includes(dateStr)) {
       existingDates.push(dateStr);
       localStorage.setItem('donationDates', JSON.stringify(existingDates));
@@ -106,6 +101,7 @@ export default function DonateBooksPage() {
     }
   };
 
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
@@ -131,18 +127,18 @@ export default function DonateBooksPage() {
       if (form.image) formData.append('image', form.image);
 
       await axios.post("http://localhost:3000/api/donate/donate", formData, {
-        headers: { 
+        headers: {
           "Content-Type": "multipart/form-data",
-          "Authorization": `Bearer ${token}` 
+          "Authorization": `Bearer ${token}`
         }
       });
 
       // Update all relevant data
       updateDashboardStats(form.quantity);
       saveDonationDate();
-      
+
       toast.success("Donation submitted successfully!");
-      
+
       // Reset form
       setForm({
         title: '',
@@ -156,10 +152,10 @@ export default function DonateBooksPage() {
         image: null
       });
       setPreview(null);
-      
+
       // Optional: Redirect after successful submission
       setTimeout(() => navigate('/dashboard'), 2000);
-      
+
     } catch (err) {
       console.error("Donation error:", err);
       toast.error(err.response?.data?.message || "Submission failed. Please try again.");
@@ -185,19 +181,19 @@ export default function DonateBooksPage() {
   }, []);
 
   return (
-    <motion.div 
-      initial={{ opacity: 0 }} 
-      animate={{ opacity: 1 }} 
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
       className="min-h-screen bg-white flex flex-col items-center justify-center p-4"
     >
       <ToastContainer position="top-center" autoClose={3000} />
-      
+
       <div className="flex flex-col lg:flex-row items-start gap-12 w-full max-w-7xl">
         <div className="w-full lg:w-1/2 text-center lg:text-left">
-          <img 
-            src="/donate-placeholder.jpg" 
-            alt="Donate Books" 
-            className="w-full max-w-md mx-auto lg:mx-0 pb-10" 
+          <img
+            src="/donate-placeholder.jpg"
+            alt="Donate Books"
+            className="w-full max-w-md mx-auto lg:mx-0 pb-10"
           />
           <h2 className="text-4xl font-bold text-blue-900 mt-4">Donate Your Books</h2>
           <p className="text-2xl text-gray-600 mt-2">
@@ -205,35 +201,36 @@ export default function DonateBooksPage() {
           </p>
         </div>
 
+
         <div className="w-full lg:w-1/3 bg-blue-100 rounded-2xl shadow-md">
           <form className="p-6" onSubmit={handleSubmit}>
             <h3 className="text-xl font-bold text-blue-900 mb-4">Add Book Information</h3>
 
             <div className="space-y-4">
-              <input 
-                required 
-                name="title" 
-                value={form.title} 
-                onChange={handleChange} 
-                placeholder="Book Title*" 
-                className="w-full p-2 border rounded" 
+              <input
+                required
+                name="title"
+                value={form.title}
+                onChange={handleChange}
+                placeholder="Book Title*"
+                className="w-full p-2 border rounded"
               />
-              
-              <textarea 
-                name="description" 
-                value={form.description} 
-                onChange={handleChange} 
-                placeholder="Description" 
-                className="w-full p-2 border rounded" 
+
+              <textarea
+                name="description"
+                value={form.description}
+                onChange={handleChange}
+                placeholder="Description"
+                className="w-full p-2 border rounded"
                 rows="3"
               />
-              
+
               <div className="grid grid-cols-2 gap-4">
-                <select 
-                  required 
-                  name="genre" 
-                  value={form.genre} 
-                  onChange={handleChange} 
+                <select
+                  required
+                  name="genre"
+                  value={form.genre}
+                  onChange={handleChange}
                   className="p-2 border rounded"
                 >
                   <option value="">Select Genre*</option>
@@ -245,12 +242,12 @@ export default function DonateBooksPage() {
                   <option>Comics</option>
                   <option>Other</option>
                 </select>
-                
-                <select 
-                  required 
-                  name="condition" 
-                  value={form.condition} 
-                  onChange={handleChange} 
+
+                <select
+                  required
+                  name="condition"
+                  value={form.condition}
+                  onChange={handleChange}
                   className="p-2 border rounded"
                 >
                   <option value="">Condition*</option>
@@ -260,63 +257,63 @@ export default function DonateBooksPage() {
                   <option>Fair</option>
                 </select>
               </div>
-              
-              <input 
-                required 
-                name="location" 
-                value={form.location} 
-                onChange={handleChange} 
-                placeholder="Location*" 
-                className="w-full p-2 border rounded" 
+
+              <input
+                required
+                name="location"
+                value={form.location}
+                onChange={handleChange}
+                placeholder="Location*"
+                className="w-full p-2 border rounded"
               />
-              
+
               <div className="flex gap-4">
-                <input 
-                  name="name" 
-                  type="text" 
-                  value={form.name} 
-                  onChange={handleChange} 
-                  placeholder="Your Name" 
-                  className="w-full p-2 border rounded" 
+                <input
+                  name="name"
+                  type="text"
+                  value={form.name}
+                  onChange={handleChange}
+                  placeholder="Your Name"
+                  className="w-full p-2 border rounded"
                 />
-                <input 
-                  name="email" 
-                  type="email" 
-                  value={form.email} 
-                  onChange={handleChange} 
-                  placeholder="Your Email" 
-                  className="w-full p-2 border rounded" 
+                <input
+                  name="email"
+                  type="email"
+                  value={form.email}
+                  onChange={handleChange}
+                  placeholder="Your Email"
+                  className="w-full p-2 border rounded"
                 />
               </div>
-              
-              <input 
-                required 
-                type="number" 
-                name="quantity" 
-                min="1" 
-                value={form.quantity} 
-                onChange={handleChange} 
-                className="w-full p-2 border rounded" 
+
+              <input
+                required
+                type="number"
+                name="quantity"
+                min="1"
+                value={form.quantity}
+                onChange={handleChange}
+                className="w-full p-2 border rounded"
               />
-              
+
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
                   Book Image (Optional)
                 </label>
-                <input 
-                  type="file" 
-                  accept="image/*" 
-                  onChange={handleFileChange} 
-                  className="w-full p-2 border rounded bg-white" 
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleFileChange}
+                  className="w-full p-2 border rounded bg-white"
                 />
               </div>
-              
+
               {preview && (
                 <div className="mt-2">
-                  <img 
-                    src={preview} 
-                    alt="Preview" 
-                    className="w-32 h-32 object-cover rounded border" 
+                  <img
+                    src={preview}
+                    alt="Preview"
+                    className="w-32 h-32 object-cover rounded border"
                   />
                   <button
                     type="button"
@@ -344,16 +341,16 @@ export default function DonateBooksPage() {
                     cropShape="rect"
                   />
                   <div className="absolute bottom-4 right-4 flex gap-2">
-                    <button 
-                      type="button" 
+                    <button
+                      type="button"
                       onClick={() => setIsCropping(false)}
                       className="bg-gray-500 text-white px-4 py-2 rounded"
                     >
                       Cancel
                     </button>
-                    <button 
-                      type="button" 
-                      onClick={handleCropComplete} 
+                    <button
+                      type="button"
+                      onClick={handleCropComplete}
                       className="bg-blue-600 text-white px-4 py-2 rounded"
                     >
                       Apply Crop
@@ -362,12 +359,11 @@ export default function DonateBooksPage() {
                 </div>
               )}
 
-              <button 
-                type="submit" 
-                disabled={isLoading} 
-                className={`w-full bg-blue-600 text-white py-3 rounded-md hover:bg-blue-700 transition flex items-center justify-center ${
-                  isLoading ? "opacity-70 cursor-not-allowed" : ""
-                }`}
+              <button
+                type="submit"
+                disabled={isLoading}
+                className={`w-full bg-blue-600 text-white py-3 rounded-md hover:bg-blue-700 transition flex items-center justify-center ${isLoading ? "opacity-70 cursor-not-allowed" : ""
+                  }`}
               >
                 {isLoading ? (
                   <>

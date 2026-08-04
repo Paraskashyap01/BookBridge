@@ -29,12 +29,7 @@ function SignUp() {
       const { email, password } = data;
       
       // Register the user with Firebase Auth
-      const userCredential = await registerUser(email, password, {
-        fullName: data.fullName,
-        username: data.username,
-        phoneNumber: data.phoneNumber,
-        address: data.address
-      });
+      const userCredential = await registerUser(email, password);
       const user = userCredential.user;
       await axios.post('http://localhost:3000/api/users/register', {
         uid: user.uid,
@@ -259,5 +254,7 @@ function SignUp() {
     </div>
   );
 }
+
+
 
 export default SignUp;

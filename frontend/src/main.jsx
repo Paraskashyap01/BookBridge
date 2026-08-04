@@ -7,6 +7,7 @@ import { RouterProvider } from 'react-router-dom'
 import { AuthProvider } from './context/AuthContext'; 
 
 
+
 createRoot(document.getElementById('root')).render(
   <StrictMode>
   <AuthProvider>  {/* Wrap the RouterProvider with AuthProvider */}

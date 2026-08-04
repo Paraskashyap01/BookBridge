@@ -13,7 +13,7 @@ export default function BookDonationPage() {
   useEffect(() => {
     const fetchDonatedBooks = async () => {
       try {
-        const res = await axios.get('http://localhost:3000/api/books/books?limit=12');
+        const res = await axios.get('http://localhost:3000/api/books/books');
         if (Array.isArray(res.data)) {
           setDonatedBooks(res.data);
         } else {

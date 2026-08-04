@@ -7,7 +7,7 @@ const sendEmail = require('../mails/mailController');
 
 // 1. Pure function (no req, res)
 async function createNotification({ bookId, requesterId, donorId, type = 'request', status = 'pending' }) {
-  
+
   const notification = await Notification.create({
     donorId,
     requesterId,
@@ -54,22 +54,22 @@ exports.createNotificationHandler = async (req, res) => {
     });
 
     // ✅ Find book by ID
-    
-    let book = null;
-if (type === "request") {
-  book = await DonateModel.findById(bookId);
-  const donor = await User.findOne({ uid: donorId });
-  const requester = await User.findOne({ uid: requesterId });
 
-  if (!book || !donor || !requester) {
+    let book = null;
+    if (type === "request") {
+      book = await DonateModel.findById(bookId);
+      const donor = await User.findOne({ uid: donorId });
+      const requester = await User.findOne({ uid: requesterId });
+
+      if (!book || !donor || !requester) {
         return res.status(404).json({ error: "Book, donor, or requester not found" });
       }
 
-    // ✅ Send email to donor
-    await sendEmail({
-      to: donor.email,
-      subject: `New Book Request: ${book.title}`,
-      html: `
+      // ✅ Send email to donor
+      await sendEmail({
+        to: donor.email,
+        subject: `New Book Request: ${book.title}`,
+        html: `
         <div style="font-family: Arial, sans-serif; background-color: #f4f4f4; padding: 20px;">
           <div style="max-width: 600px; margin: auto; background: white; padding: 20px; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.05);">
             <h2 style="text-align: center; color: #2c3e50;">📚 Book Donation Platform</h2>
@@ -82,8 +82,11 @@ if (type === "request") {
           </div>
         </div>
       `,
-    });
-  }
+      });
+    }
+
+
+
 
     res.status(201).json(notification);  // ✅ Send response
   } catch (err) {
@@ -159,7 +162,7 @@ exports.getRequesterNotifications = async (req, res) => {
     const { requesterId } = req.params;
     const notifications = await Notification.find({
       requesterId,
-      type: "confirmation", 
+      type: "confirmation",
       status: "confirmed" // or other filters
     }).sort({ timestamp: -1 });
 

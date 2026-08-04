@@ -9,31 +9,31 @@ function Login() {
   const [isLoading, setIsLoading] = React.useState(false);
   const { loginUser, signInWithGoogle } = useAuth();
   const navigate = useNavigate();
-  
+
   const { register, handleSubmit, formState: { errors } } = useForm();
 
   const onSubmit = async (data) => {
-  setIsLoading(true);
-  setError('');
+    setIsLoading(true);
+    setError('');
 
-  try {
-    const userCredential = await loginUser(data.email, data.password);
-    const user = userCredential.user;
+    try {
+      const userCredential = await loginUser(data.email, data.password);
+      const user = userCredential.user;
 
-    // ✅ Fetch user details from your MongoDB using UID
-    const res = await fetch(`http://localhost:3000/api/users/register/${user.uid}`);
-    const userData = await res.json();
+      // ✅ Fetch user details from your MongoDB using UID
+      const res = await fetch(`http://localhost:3000/api/users/register/${user.uid}`);
+      const userData = await res.json();
 
-    localStorage.setItem("userData", JSON.stringify(userData));
+      localStorage.setItem("userData", JSON.stringify(userData));
 
-    navigate('/home');
-  } catch (err) {
-    console.error(err);
-    setError('Please register your email and password');
-  } finally {
-    setIsLoading(false);
-  }
-};
+      navigate('/home');
+    } catch (err) {
+      console.error(err);
+      setError('Please register your email and password');
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
 
   const handleGoogleSignIn = async () => {
@@ -77,10 +77,10 @@ function Login() {
     <div className="flex h-screen bg-gray-100 overflow-hidden">
       {/* Left Section with Background Image and Logo */}
       <div className="hidden lg:flex lg:w-1/2 bg-blue-600 flex-col items-center justify-center p-12 relative overflow-hidden">
-        <img 
-          src={bookLogo} 
-          alt="Book Donation Tracker" 
-          className="w-32 h-32 mb-8" 
+        <img
+          src={bookLogo}
+          alt="Book Donation Tracker"
+          className="w-32 h-32 mb-8"
         />
         <div className="text-white text-center">
           <h1 className="text-4xl font-bold mb-6">Share Knowledge</h1>
@@ -90,14 +90,15 @@ function Login() {
             <p className="mt-2 font-semibold">— George R.R. Martin</p>
           </div>
         </div>
-        
+
         {/* Decorative book imagery */}
         <div className="absolute bottom-0 left-0 w-full">
-          <div className="h-32 bg-contain bg-bottom bg-no-repeat" 
-               style={{backgroundImage: `url('/images/books-silhouette.png')`}}>
+          <div className="h-32 bg-contain bg-bottom bg-no-repeat"
+            style={{ backgroundImage: `url('/images/books-silhouette.png')` }}>
           </div>
         </div>
       </div>
+
       
       {/* Right Section with Login Form */}
       <div className="w-full lg:w-1/2 flex items-center justify-center p-8 overflow-y-auto no-scrollbar">
@@ -106,13 +107,13 @@ function Login() {
             <h2 className="text-3xl font-bold text-gray-800">Welcome Back!</h2>
             <p className="text-gray-600 mt-2">Sign in to continue donating books</p>
           </div>
-          
+
           {error && (
             <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
               {error}
             </div>
           )}
-          
+
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
             <div>
               <label htmlFor="email" className="block text-sm font-medium text-gray-700">
@@ -127,7 +128,7 @@ function Login() {
               />
               {errors.email && <span className="text-xs text-red-500">This field is required</span>}
             </div>
-            
+
             <div>
               <label htmlFor="password" className="block text-sm font-medium text-gray-700">
                 Password
@@ -141,7 +142,7 @@ function Login() {
               />
               {errors.password && <span className="text-xs text-red-500">This field is required</span>}
             </div>
-            
+
             <div className="flex items-center justify-between">
               <div className="flex items-center">
                 <input
@@ -154,14 +155,14 @@ function Login() {
                   Remember me
                 </label>
               </div>
-              
+
               <div className="text-sm">
                 <Link to="/forgot-password" className="font-medium text-blue-600 hover:text-blue-500">
                   Forgot password?
                 </Link>
               </div>
             </div>
-            
+
             <div>
               <button
                 type="submit"
@@ -172,7 +173,7 @@ function Login() {
               </button>
             </div>
           </form>
-          
+
           <div className="mt-4">
             <div className="relative">
               <div className="absolute inset-0 flex items-center">
@@ -182,7 +183,7 @@ function Login() {
                 <span className="px-2 bg-white text-gray-500">Or continue with</span>
               </div>
             </div>
-            
+
             <div className="mt-4 grid grid-cols-4 gap-3">
               <button
                 type="button"
@@ -228,7 +229,7 @@ function Login() {
               </button>
             </div>
           </div>
-          
+
           <p className="mt-6 text-center text-sm text-gray-600">
             Don't have an account?{' '}
             <Link to="/SignUp" className="font-medium text-blue-600 hover:text-blue-500">

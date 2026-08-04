@@ -70,6 +70,7 @@ export default function Header() {
             onClick={() => setMenuOpen(!menuOpen)}
           />
 
+
           {/* Dropdown Menu */}
           {menuOpen && (
             <div className="absolute right-0 mt-2 w-40 bg-white border rounded-md shadow-lg z-50">
@@ -92,3 +93,5 @@ export default function Header() {
     </header>
   );
 }
+
+

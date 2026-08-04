@@ -9,6 +9,7 @@ const transporter = nodemailer.createTransport({
   },
 });
 
+
 const sendEmail = async ({ to, subject, text, html }) => {
   const mailOptions = {
     from: '"Book Donation Platform" <yourgmail@gmail.com>',

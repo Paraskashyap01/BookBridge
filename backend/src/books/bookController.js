@@ -10,7 +10,7 @@ exports.getAllBooks = async (req, res) => {
       filter.email = req.query.email;
     } else {
       // Default: show all books that are still available
-      filter.status = { $ne: 'donated' };
+      filter.status = { $ne: 'Donated' };
     }
 
     const books = await DonateModel.find(filter);
@@ -19,6 +19,8 @@ exports.getAllBooks = async (req, res) => {
     res.status(500).json({ message: 'Error fetching books', error: err.message });
   }
 };
+
+
 
 
 exports.getBookById = async (req, res) => {
