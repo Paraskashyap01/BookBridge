@@ -116,9 +116,12 @@ export default function NotificationsPage() {
           requesterId: originalNotif.requesterId,
           bookId: originalNotif.bookId,
           type: "confirmation",
-          status: "confirmed",
-          header: await authHeader()
-        });
+          status: "confirmed"
+        },
+          {
+            headers: await authHeader() // Include the auth header with the token
+          }
+        );
       }
 
       // ✅ Optimistically update UI

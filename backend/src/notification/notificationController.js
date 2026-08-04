@@ -114,6 +114,12 @@ exports.updateNotificationStatus = async (req, res) => {
   try {
     const { id } = req.params;
     const { status } = req.body;
+    
+    const notif = await Notification.findById(id);
+    if (!notif) return res.status(404).json({ error: 'Not found' });
+    if (notif.donorId !== req.user.uid) {
+      return res.status(403).json({ error: 'Not your notification' });
+    }
 
     const updated = await Notification.findByIdAndUpdate(
       id,
