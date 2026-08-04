@@ -13,10 +13,19 @@ const storage = multer.diskStorage({
   },
 });
 
-const upload = multer({ storage: storage });
+const upload = multer({
+  storage,
+  limits: { fileSize: 5 * 1024 * 1024 },
+  fileFilter: (req, file, cb) => {
+    const ok = ['image/jpeg', 'image/png', 'image/webp'].includes(file.mimetype);
+    cb(ok ? null : new Error('Only jpg/png/webp images allowed'), ok);
+  },
+});
 
+// backend/src/donate/donateRoutes.js
+const requireAuth = require('../middleware/auth');
+router.post('/donate', requireAuth, upload.single('image'), createDonation);
 // Routes
-router.post('/donate', upload.single('image'), createDonation);
 router.get('/count', getDonationCount);
 router.get('/donation-dates', getDonationDates);
 

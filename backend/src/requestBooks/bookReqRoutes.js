@@ -2,7 +2,8 @@
 const express = require('express');
 const router = express.Router();
 const { createBookRequest } = require('../requestBooks/bookReqController');
-
-router.post('/create', createBookRequest);
+// backend/src/requestBooks/bookReqRoutes.js
+const requireAuth = require('../middleware/auth');
+router.post('/create', requireAuth, createBookRequest);
 
 module.exports = router;

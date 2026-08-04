@@ -13,7 +13,7 @@ const createDonation = async (req, res) => {
       ...req.body,
       image: req.file.path.replace(/\\/g, '/'), // Use the path from Multer
       quantity: parseInt(req.body.quantity) || 1,
-      donorId: req.body.donorId 
+      donorId: req.user.uid 
     });
 
     await donation.save();
@@ -63,7 +63,7 @@ const getDonationDates = async (req, res) => {
       return res.status(400).json({ message: 'Missing donorId' });
     }
 
-    const donations = await Donate.find({ donorId, status: 'donated' });
+    const donations = await Donate.find({ donorId, status: 'Donated' });
 
     const dates = donations.map(donation => 
       new Date(donation.createdAt).toISOString().split('T')[0]

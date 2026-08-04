@@ -126,7 +126,7 @@ exports.updateNotificationStatus = async (req, res) => {
       const book = await DonateModel.findById(updated.bookId);
       console.log("Deleting book with ID:", updated.bookId);
       if (book) {
-        await DonateModel.findByIdAndUpdate(updated.bookId, { status: "donated" });
+        await DonateModel.findByIdAndUpdate(updated.bookId, { status: "Donated" });
       }
       const requester = await User.findOne({ uid: updated.requesterId });
 

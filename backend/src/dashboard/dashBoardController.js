@@ -3,7 +3,7 @@ const Notification = require('../notification/notificationModel');
 
 // GET /api/dashboard/stats?uid=xyz
 exports.getDashboardStats = async (req, res) => {
-  const { uid } = req.query;
+  const uid = req.user.uid;
 
   if (!uid) {
     return res.status(400).json({ message: 'Missing user UID' });
