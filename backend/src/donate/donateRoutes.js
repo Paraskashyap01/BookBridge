@@ -26,8 +26,8 @@ const upload = multer({
 const requireAuth = require('../middleware/auth');
 router.post('/donate', requireAuth, upload.single('image'), createDonation);
 // Routes
-router.get('/count', getDonationCount);
-router.get('/donation-dates', getDonationDates);
+router.get('/count', requireAuth, getDonationCount);
+router.get('/donation-dates', requireAuth, getDonationDates);
 
 
 module.exports = router;

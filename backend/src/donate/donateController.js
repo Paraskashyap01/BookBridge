@@ -33,7 +33,7 @@ const createDonation = async (req, res) => {
 
 const getDonationCount = async (req, res) => {
   try {
-    const donorId = req.query.donorId;
+    const donorId = req.user.uid; // Get donorId from authenticated user
     if (!donorId) {
       return res.status(400).json({ message: 'Missing donorId' });
     }
@@ -58,7 +58,7 @@ const getDonationCount = async (req, res) => {
 
 const getDonationDates = async (req, res) => {
   try {
-    const { donorId } = req.query;
+    const donorId = req.user.uid; // Get donorId from authenticated user
     if (!donorId) {
       return res.status(400).json({ message: 'Missing donorId' });
     }

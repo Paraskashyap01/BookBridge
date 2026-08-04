@@ -3,8 +3,8 @@ const User = require('./userModel');
 // 1. Register User
 const registerUser = async (req, res) => {
   try {
-    const { uid, email, fullName, username, phoneNumber, address } = req.body;
-
+    const { email, fullName, username, phoneNumber, address } = req.body;
+    const uid = req.user.uid; // Get UID from authenticated user
     // Optional: check if username already exists
     const existing = await User.findOne({ username });
     if (existing) {
