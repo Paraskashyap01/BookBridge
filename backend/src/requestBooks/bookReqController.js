@@ -6,8 +6,8 @@ const { createNotification } = require('../notification/notificationController')
 // Handle the creation of a book request and a notification
 exports.createBookRequest = async (req, res) => {
   try {
-    const { bookId, donorId, requesterId, requesterEmail } = req.body;
-
+    const { bookId, donorId, requesterEmail } = req.body;
+    const requesterId = req.user.uid; // Assuming the requester is the logged-in user
     // Create a book request (save to DB or do other necessary steps)
     const newRequest = await BookRequest.create({
       bookId:new mongoose.Types.ObjectId(bookId),
