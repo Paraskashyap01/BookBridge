@@ -3,7 +3,7 @@ import { Bell } from "lucide-react";
 import axios from "axios";
 import { useAuth } from "../context/AuthContext"; // adjust path if needed
 import { useLocation } from "react-router-dom";
-
+import { authHeader } from '../utils/authHeader';
 
 export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -22,7 +22,9 @@ export default function Header() {
         console.error("No userId found in localStorage");
         return;
         }
-        const res = await axios.get(`http://localhost:3000/api/notifications?donorId=${uid}`);
+        const res = await axios.get(`http://localhost:3000/api/notifications?donorId=${uid}`,{
+          headers: await authHeader() // Use the authHeader function to get the token
+        });
 
         setNotificationCount(res.data.length); // only pending ones are fetched in backend
       } catch (err) {

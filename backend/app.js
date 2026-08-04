@@ -11,6 +11,8 @@ const notificationRoutes = require('./src/notification/notificationRoutes');
 const testMailRoute = require('./src/mails/mailRoutes');
 const dashboardStats = require('./src/dashboard/dashBoardRoute');
 
+require('dotenv').config();
+
 
 const app = express();
 
@@ -27,7 +29,6 @@ app.use(cors({
 }));
 app.use('/uploads', express.static(path.join(__dirname, 'uploads'))); // Serve uploaded files
 
-require('dotenv').config();
 
 // Routes
 app.use('/api/donate', donateRoutes);

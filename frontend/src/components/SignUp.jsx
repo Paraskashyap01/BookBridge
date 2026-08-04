@@ -4,6 +4,7 @@ import { useForm } from "react-hook-form";
 import bookLogo from '../assets/book-donation-logo.svg';
 import { useAuth } from '../context/AuthContext';
 import axios from 'axios';
+import { authHeader } from '../utils/authHeader';
 
 function SignUp() {
   const [error, setError] = useState('');
@@ -38,6 +39,8 @@ function SignUp() {
         username: data.username,
         phoneNumber: data.phoneNumber,
         address: data.address
+      }, {
+        headers: await authHeader() // Include the auth header with the token
       });
 
       localStorage.setItem("userData", JSON.stringify({

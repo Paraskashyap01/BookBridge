@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useForm } from "react-hook-form";
 import bookLogo from '../assets/book-donation-logo.svg';
 import { useAuth } from '../context/AuthContext';
+import { authHeader } from '../utils/authHeader';
 
 function Login() {
   const [error, setError] = React.useState('');
@@ -21,7 +22,9 @@ function Login() {
       const user = userCredential.user;
 
       // ✅ Fetch user details from your MongoDB using UID
-      const res = await fetch(`http://localhost:3000/api/users/register/${user.uid}`);
+      const res = await fetch(`http://localhost:3000/api/users/register/${user.uid}`, {
+        headers: await authHeader()
+      });
       const userData = await res.json();
 
       localStorage.setItem("userData", JSON.stringify(userData));
@@ -45,7 +48,9 @@ function Login() {
       const user = result.user;
 
       // ✅ Fetch user data from MongoDB by UID
-      const res = await fetch(`http://localhost:3000/api/users/register/${user.uid}`);
+      const res = await fetch(`http://localhost:3000/api/users/register/${user.uid}`, {
+        headers: await authHeader()
+      });
       const userData = await res.json();
 
       // ✅ Store in localStorage

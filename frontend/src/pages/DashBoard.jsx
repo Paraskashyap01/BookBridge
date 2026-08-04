@@ -4,6 +4,7 @@ import axios from 'axios';
 import { auth } from '../firebase/firebase.config';
 import toast, { Toaster } from "react-hot-toast";
 import { useNavigate } from 'react-router-dom';
+import { authHeader } from '../utils/authHeader';
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -139,7 +140,9 @@ const Dashboard = () => {
       const localUser = JSON.parse(localStorage.getItem('user'));
       const uid = localUser?._id;
 
-      const res = await axios.get(`http://localhost:3000/api/donate/donation-dates?donorId=${uid}`);
+      const res = await axios.get(`http://localhost:3000/api/donate/donation-dates?donorId=${uid}`, {
+        headers: await authHeader() // Include the auth header with the token
+      });
       setDonationDates(res.data.donationDates); // Should be an array of YYYY-MM-DD strings
     } catch (err) {
       console.error("Failed to fetch donation dates", err);
@@ -156,7 +159,9 @@ const Dashboard = () => {
       const localUser = JSON.parse(localStorage.getItem('user'));
       const uid = localUser?._id;
 
-      const res = await axios.get(`http://localhost:3000/api/dashboard/stats?uid=${uid}`);
+      const res = await axios.get(`http://localhost:3000/api/dashboard/stats?uid=${uid}`, {
+        headers: await authHeader() // Include the auth header with the token
+      });
 
       const { booksAdded, booksDonated } = res.data;
 
@@ -186,7 +191,9 @@ useEffect(() => {
       const localUser = JSON.parse(localStorage.getItem('user'));
       const uid = localUser?._id;
 
-      const res = await axios.get(`http://localhost:3000/api/notifications/request-counts?donorId=${uid}`);
+      const res = await axios.get(`http://localhost:3000/api/notifications/request-counts?donorId=${uid}`, {
+        headers: await authHeader() // Include the auth header with the token
+      });
       const { pendingRequests, approvedRequests } = res.data;
 
       setStats(prev => ({

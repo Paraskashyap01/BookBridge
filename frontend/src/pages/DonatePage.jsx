@@ -7,6 +7,7 @@ import Cropper from 'react-easy-crop';
 import { getCroppedImg } from '../utils/cropImage';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
+import { authHeader } from '../utils/authHeader';
 
 export default function DonateBooksPage() {
   const [userData, setUserData] = useState({
@@ -128,8 +129,8 @@ export default function DonateBooksPage() {
 
       await axios.post("http://localhost:3000/api/donate/donate", formData, {
         headers: {
-          "Content-Type": "multipart/form-data",
-          "Authorization": `Bearer ${token}`
+          'Content-Type': 'multipart/form-data',
+          'Authorization': `Bearer ${token}`
         }
       });
 

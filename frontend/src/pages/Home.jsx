@@ -5,6 +5,8 @@ import 'swiper/css';
 import 'swiper/css/navigation';
 import axios from 'axios';
 import { useNavigate } from "react-router-dom";
+import { authHeader } from '../utils/authHeader';
+
 
 export default function BookDonationPage() {
   const [donatedBooks, setDonatedBooks] = useState([]);
@@ -13,7 +15,9 @@ export default function BookDonationPage() {
   useEffect(() => {
     const fetchDonatedBooks = async () => {
       try {
-        const res = await axios.get('http://localhost:3000/api/books/books');
+        const res = await axios.get('http://localhost:3000/api/books/books', {
+          headers: await authHeader()
+        });
         if (Array.isArray(res.data)) {
           setDonatedBooks(res.data);
         } else {

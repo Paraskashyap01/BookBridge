@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import {Book} from "lucide-react";
 import axios from 'axios';
+import { authHeader } from '../utils/authHeader';
+
 
 export default function BookRequestPage() {
   const [categoryOpen, setCategoryOpen] = useState(false);
@@ -27,7 +29,9 @@ export default function BookRequestPage() {
   useEffect(() => {
     const fetchBooks = async () => {
       try {
-        const res = await axios.get('http://localhost:3000/api/books/books');
+        const res = await axios.get('http://localhost:3000/api/books/books', {
+          headers: await authHeader()
+        });
         if (Array.isArray(res.data)) {
             setBooks(res.data);
             setFilteredBooks(res.data);
@@ -48,7 +52,9 @@ export default function BookRequestPage() {
 useEffect(() => {
   const refreshTrigger = localStorage.getItem("refreshBooks");
   if (refreshTrigger === "true") {
-    axios.get("http://localhost:3000/api/books/books")
+    axios.get("http://localhost:3000/api/books/books", {
+      headers: await authHeader()
+    })
       .then((res) => {
         if (Array.isArray(res.data)) {
           setBooks(res.data);
@@ -104,6 +110,8 @@ useEffect(() => {
         donorId: book.donorId,  // or however you're storing it
         requesterId: userData.uid,
         requesterEmail: userData.email
+      }, {
+        headers: await authHeader()
       });
   
       setRequestSuccess(`Request sent for "${title}"`);
