@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
@@ -10,8 +11,6 @@ const bookReqRoutes = require('./src/requestBooks/bookReqRoutes');
 const notificationRoutes = require('./src/notification/notificationRoutes');
 const testMailRoute = require('./src/mails/mailRoutes');
 const dashboardStats = require('./src/dashboard/dashBoardRoute');
-
-require('dotenv').config();
 
 
 const app = express();

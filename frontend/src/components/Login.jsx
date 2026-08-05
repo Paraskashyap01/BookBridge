@@ -20,15 +20,23 @@ function Login() {
     try {
       const userCredential = await loginUser(data.email, data.password);
       const user = userCredential.user;
+      const token = await user.getIdToken();
 
       // ✅ Fetch user details from your MongoDB using UID
       const res = await fetch(`http://localhost:3000/api/users/register/${user.uid}`, {
-        headers: await authHeader()
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
       });
+
+      if (!res.ok) {
+        const errorBody = await res.json().catch(() => null);
+        const message = errorBody?.message || errorBody?.error || 'Unable to fetch user profile';
+        throw new Error(message);
+      }
+
       const userData = await res.json();
-
       localStorage.setItem("userData", JSON.stringify(userData));
-
       navigate('/home');
     } catch (err) {
       console.error(err);
@@ -46,14 +54,22 @@ function Login() {
     try {
       const result = await signInWithGoogle();
       const user = result.user;
+      const token = await user.getIdToken();
 
       // ✅ Fetch user data from MongoDB by UID
       const res = await fetch(`http://localhost:3000/api/users/register/${user.uid}`, {
-        headers: await authHeader()
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
       });
-      const userData = await res.json();
 
-      // ✅ Store in localStorage
+      if (!res.ok) {
+        const errorBody = await res.json().catch(() => null);
+        const message = errorBody?.message || errorBody?.error || 'Unable to fetch user profile';
+        throw new Error(message);
+      }
+
+      const userData = await res.json();
       localStorage.setItem("userData", JSON.stringify(userData));
 
       navigate('/home');

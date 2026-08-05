@@ -32,6 +32,7 @@ function SignUp() {
       // Register the user with Firebase Auth
       const userCredential = await registerUser(email, password);
       const user = userCredential.user;
+      const token = await user.getIdToken();
       await axios.post('http://localhost:3000/api/users/register', {
         uid: user.uid,
         email,
@@ -40,7 +41,9 @@ function SignUp() {
         phoneNumber: data.phoneNumber,
         address: data.address
       }, {
-        headers: await authHeader() // Include the auth header with the token
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
       });
 
       localStorage.setItem("userData", JSON.stringify({
