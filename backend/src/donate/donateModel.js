@@ -17,7 +17,20 @@ const donateSchema = new mongoose.Schema(
     genre: {
       type: String,
       required: [true, "Genre is required"],
-      enum: ["Fiction", "Non-Fiction", "Science", "History", "Biography", "Other"],
+      enum: [
+        "Fiction",
+        "Non-Fiction",
+        "Suspense/Thriller",
+        "Horror",
+        "Crime",
+        "Educational",
+        "Science",
+        "History",
+        "Biography",
+        "Comics",
+        "Dystopian",
+        "Other",
+      ],
     },
     condition: {
       type: String,
@@ -42,7 +55,7 @@ const donateSchema = new mongoose.Schema(
     },
     image: {
       type: String, // This will store the file path or URL
-      required: [true, "Cover image is required"],
+      required: false,
     },
     status: {
       type: String,

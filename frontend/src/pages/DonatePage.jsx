@@ -8,6 +8,7 @@ import { getCroppedImg } from '../utils/cropImage';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { authHeader } from '../utils/authHeader';
+import genres from '../utils/genres';
 
 export default function DonateBooksPage() {
   const [userData, setUserData] = useState({
@@ -235,13 +236,9 @@ export default function DonateBooksPage() {
                   className="p-2 border rounded"
                 >
                   <option value="">Select Genre*</option>
-                  <option>Fiction</option>
-                  <option>Non-Fiction</option>
-                  <option>Suspense/thriller</option>
-                  <option>Educational</option>
-                  <option>Biography</option>
-                  <option>Comics</option>
-                  <option>Other</option>
+                  {genres.map((g) => (
+                    <option key={g} value={g}>{g}</option>
+                  ))}
                 </select>
 
                 <select

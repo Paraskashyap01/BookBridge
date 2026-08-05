@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import {Book} from "lucide-react";
 import axios from 'axios';
 import { authHeader } from '../utils/authHeader';
+import genres from '../utils/genres';
 
 
 export default function BookRequestPage() {
@@ -21,8 +22,7 @@ export default function BookRequestPage() {
   const [loading, setLoading] = useState(false);
 
   const itemsPerPage = 4;
-
-  const genre = ['Fiction', 'Non Fiction', 'Horror', 'Crime', 'Thriller', 'Educational', 'Dystopian'];
+  const genre = genres; // use shared genres list
 //   const locations = ['New York', 'Los Angeles', 'Chicago', 'Houston', 'Boston', 'Seattle', 'Phoenix', 'San Francisco'];
 
   // ✅ Fetch books from backend
@@ -51,20 +51,25 @@ export default function BookRequestPage() {
 // 🔁 2. Refetch when refresh flag is set (after book deletion)
 useEffect(() => {
   const refreshTrigger = localStorage.getItem("refreshBooks");
-  if (refreshTrigger === "true") {
-    axios.get("http://localhost:3000/api/books/books", {
-      headers: await authHeader()
-    })
-      .then((res) => {
+  const refetchIfNeeded = async () => {
+    if (refreshTrigger === "true") {
+      try {
+        const res = await axios.get("http://localhost:3000/api/books/books", {
+          headers: await authHeader()
+        });
         if (Array.isArray(res.data)) {
           setBooks(res.data);
           setFilteredBooks(res.data);
         }
-      })
-      .catch((err) => console.error("Error refetching books:", err));
+      } catch (err) {
+        console.error("Error refetching books:", err);
+      } finally {
+        localStorage.removeItem("refreshBooks");
+      }
+    }
+  };
 
-    localStorage.removeItem("refreshBooks");
-  }
+  refetchIfNeeded();
 }, [filteredBooks.length]);
 
 

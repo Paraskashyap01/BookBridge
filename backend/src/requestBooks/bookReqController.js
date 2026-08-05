@@ -1,6 +1,7 @@
 // controllers/bookRequestController.js
-const BookRequest = require('../requestBooks/bookReqModel');
+const BookRequest = require('./bookReqModel');
 const mongoose = require('mongoose');
+const Donation = require('../donate/donateModel');
 const { createNotification } = require('../notification/notificationController');  // Import the createNotification function
 
 // Handle the creation of a book request and a notification
