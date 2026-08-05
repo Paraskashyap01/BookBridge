@@ -20,14 +20,14 @@ export default function NotificationsPage() {
       }
 
       // 1️⃣ Fetch donor-side notifications
-      const donorRes = await axios.get(`http://localhost:3000/api/notifications?donorId=${userId}`, {
+      const donorRes = await axios.get(`${apiUrl}/api/notifications?donorId=${userId}`, {
         headers: await authHeader()
       });
       const donorNotifications = await Promise.all(donorRes.data.map(async (notif) => {
-        const bookRes = await axios.get(`http://localhost:3000/api/books/books/${notif.bookId}`, {
+        const bookRes = await axios.get(`${apiUrl}/api/books/books/${notif.bookId}`, {
           headers: await authHeader()
         });
-        const requesterRes = await axios.get(`http://localhost:3000/api/users/register/${notif.requesterId}`, {
+        const requesterRes = await axios.get(`${apiUrl}/api/users/register/${notif.requesterId}`, {
           headers: await authHeader()
         });
         return {
@@ -40,14 +40,14 @@ export default function NotificationsPage() {
       }));
 
       // 2️⃣ Fetch requester-side confirmation notifications
-      const requesterRes = await axios.get(`http://localhost:3000/api/notifications/requester/${userId}`, {
+      const requesterRes = await axios.get(`${apiUrl}/api/notifications/requester/${userId}`, {
         headers: await authHeader()
       });
       const requesterNotifications = await Promise.all(requesterRes.data.map(async (notif) => {
         let bookTitle = "Unknown Book";
 
         try {
-          const bookRes = await axios.get(`http://localhost:3000/api/books/books/${notif.bookId}`, {
+          const bookRes = await axios.get(`${apiUrl}/api/books/books/${notif.bookId}`, {
             headers: await authHeader()
           });
           bookTitle = bookRes.data?.title || "Unknown Book";
@@ -104,14 +104,14 @@ export default function NotificationsPage() {
       }
 
       // ✅ Update backend
-      await axios.patch(`http://localhost:3000/api/notifications/${notificationId}`, {
+      await axios.patch(`${apiUrl}/api/notifications/${notificationId}`, {
         status: action,
       }, {
         headers: await authHeader()
       });
 
       if (action === "accepted" && originalNotif) {
-        await axios.post("http://localhost:3000/api/notifications", {
+        await axios.post(`${apiUrl}/api/notifications`, {
           donorId: originalNotif.donorId,
           requesterId: originalNotif.requesterId,
           bookId: originalNotif.bookId,

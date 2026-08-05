@@ -6,6 +6,7 @@ import 'swiper/css/navigation';
 import axios from 'axios';
 import { useNavigate } from "react-router-dom";
 import { authHeader } from '../utils/authHeader';
+import apiUrl from '../utils/apiConfig';
 
 
 export default function BookDonationPage() {
@@ -15,7 +16,7 @@ export default function BookDonationPage() {
   useEffect(() => {
     const fetchDonatedBooks = async () => {
       try {
-        const res = await axios.get('http://localhost:3000/api/books/books', {
+        const res = await axios.get(`${apiUrl}/api/books/books`, {
           headers: await authHeader()
         });
         if (Array.isArray(res.data)) {
@@ -83,7 +84,7 @@ export default function BookDonationPage() {
                     onClick={() => handleBookClick(book)}
                   >
                     <img
-                      src={book.image ? `http://localhost:3000/${book.image}` : '/fallback-image.jpg'}
+                      src={book.image ? `${apiUrl}/${book.image}` : '/fallback-image.jpg'}
                       alt={`${book.title} book cover`}
                       className="w-24 h-32 object-cover rounded scroll pt-8"
                     />

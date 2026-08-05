@@ -8,6 +8,7 @@ import { getCroppedImg } from '../utils/cropImage';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { authHeader } from '../utils/authHeader';
+import apiUrl from '../utils/apiConfig';
 import genres from '../utils/genres';
 
 export default function DonateBooksPage() {
@@ -128,7 +129,7 @@ export default function DonateBooksPage() {
       formData.append('quantity', Number(form.quantity));
       if (form.image) formData.append('image', form.image);
 
-      await axios.post("http://localhost:3000/api/donate/donate", formData, {
+      await axios.post(`${apiUrl}/api/donate/donate`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
           'Authorization': `Bearer ${token}`

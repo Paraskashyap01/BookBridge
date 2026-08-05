@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import {Book} from "lucide-react";
 import axios from 'axios';
 import { authHeader } from '../utils/authHeader';
+import apiUrl from '../utils/apiConfig';
 import genres from '../utils/genres';
 
 
@@ -29,7 +30,7 @@ export default function BookRequestPage() {
   useEffect(() => {
     const fetchBooks = async () => {
       try {
-        const res = await axios.get('http://localhost:3000/api/books/books', {
+        const res = await axios.get(`${apiUrl}/api/books/books`, {
           headers: await authHeader()
         });
         if (Array.isArray(res.data)) {
@@ -54,7 +55,7 @@ useEffect(() => {
   const refetchIfNeeded = async () => {
     if (refreshTrigger === "true") {
       try {
-        const res = await axios.get("http://localhost:3000/api/books/books", {
+        const res = await axios.get(`${apiUrl}/api/books/books`, {
           headers: await authHeader()
         });
         if (Array.isArray(res.data)) {
@@ -110,7 +111,7 @@ useEffect(() => {
       }
 
       const book = books.find(b => b._id === bookId);
-      await axios.post('http://localhost:3000/api/bookRequests/create', {
+      await axios.post(`${apiUrl}/api/bookRequests/create`, {
         bookId,
         donorId: book.donorId,  // or however you're storing it
         requesterId: userData.uid,
@@ -205,7 +206,7 @@ useEffect(() => {
           >
             <div className="flex gap-3">
             <img
-            src={book.image ? `http://localhost:3000/${book.image}` : '/fallback-image.jpg'}
+            src={book.image ? `${apiUrl}/${book.image}` : '/fallback-image.jpg'}
             alt={`${book.title} book cover`}
             className="w-24 h-32 object-cover rounded "
             />

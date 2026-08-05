@@ -140,7 +140,7 @@ const Dashboard = () => {
       const localUser = JSON.parse(localStorage.getItem('user'));
       const uid = localUser?._id;
 
-      const res = await axios.get(`http://localhost:3000/api/donate/donation-dates?donorId=${uid}`, {
+      const res = await axios.get(`${apiUrl}/api/donate/donation-dates?donorId=${uid}`, {
         headers: await authHeader() // Include the auth header with the token
       });
       setDonationDates(res.data.donationDates); // Should be an array of YYYY-MM-DD strings
@@ -159,7 +159,7 @@ const Dashboard = () => {
       const localUser = JSON.parse(localStorage.getItem('user'));
       const uid = localUser?._id;
 
-      const res = await axios.get(`http://localhost:3000/api/dashboard/stats?uid=${uid}`, {
+      const res = await axios.get(`${apiUrl}/api/dashboard/stats?uid=${uid}`, {
         headers: await authHeader() // Include the auth header with the token
       });
 
@@ -191,7 +191,7 @@ useEffect(() => {
       const localUser = JSON.parse(localStorage.getItem('user'));
       const uid = localUser?._id;
 
-      const res = await axios.get(`http://localhost:3000/api/notifications/request-counts?donorId=${uid}`, {
+      const res = await axios.get(`${apiUrl}/api/notifications/request-counts?donorId=${uid}`, {
         headers: await authHeader() // Include the auth header with the token
       });
       const { pendingRequests, approvedRequests } = res.data;

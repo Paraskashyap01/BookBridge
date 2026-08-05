@@ -5,6 +5,7 @@ import bookLogo from '../assets/book-donation-logo.svg';
 import { useAuth } from '../context/AuthContext';
 import axios from 'axios';
 import { authHeader } from '../utils/authHeader';
+import apiUrl from '../utils/apiConfig';
 
 function SignUp() {
   const [error, setError] = useState('');
@@ -33,7 +34,7 @@ function SignUp() {
       const userCredential = await registerUser(email, password);
       const user = userCredential.user;
       const token = await user.getIdToken();
-      await axios.post('http://localhost:3000/api/users/register', {
+      await axios.post(`${apiUrl}/api/users/register`, {
         uid: user.uid,
         email,
         fullName: data.fullName,

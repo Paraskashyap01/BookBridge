@@ -42,52 +42,8 @@ async function createNotification({ bookId, requesterId, donorId, type = 'reques
 // 2. API Route Handler
 exports.createNotificationHandler = async (req, res) => {
   try {
-    const { bookId, requesterId, donorId, type = "request", status = "pending" } = req.body;
-
-    // Create notification entry
-    const notification = await Notification.create({
-      donorId,
-      requesterId,
-      bookId,
-      type,
-      status,
-    });
-
-    // ✅ Find book by ID
-
-    let book = null;
-    if (type === "request") {
-      book = await DonateModel.findById(bookId);
-      const donor = await User.findOne({ uid: donorId });
-      const requester = await User.findOne({ uid: requesterId });
-
-      if (!book || !donor || !requester) {
-        return res.status(404).json({ error: "Book, donor, or requester not found" });
-      }
-
-      // ✅ Send email to donor
-      await sendEmail({
-        to: donor.email,
-        subject: `New Book Request: ${book.title}`,
-        html: `
-        <div style="font-family: Arial, sans-serif; background-color: #f4f4f4; padding: 20px;">
-          <div style="max-width: 600px; margin: auto; background: white; padding: 20px; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.05);">
-            <h2 style="text-align: center; color: #2c3e50;">📚 Book Donation Platform</h2>
-            <hr style="border: none; border-top: 1px solid #ddd;">
-            <p style="font-size: 16px;"><strong>${requester.fullName}</strong> has requested your book "<strong>${book.title}</strong>".</p>
-            <p style="font-size: 15px; color: #555;">Please log in to your dashboard to <strong>accept or decline</strong> this request.</p>
-            <a href="http://localhost:5173/signin" style="display: inline-block; margin-top: 16px; padding: 10px 20px; background-color: #007bff; color: white; text-decoration: none; border-radius: 5px;">Sign In & Manage Requests</a>
-            <p style="margin-top: 25px; font-size: 14px; color: #333;">You can also contact the requester at: <a href="mailto:${requester.email}">${requester.email}</a></p>
-            <p style="margin-top: 30px; font-size: 12px; color: #999;">Thank you for sharing books and helping the community.</p>
-          </div>
-        </div>
-      `,
-      });
-    }
-
-
-
-
+    const { bookId, requesterId, donorId, type = 'request', status = 'pending' } = req.body;
+    const notification = await createNotification({ bookId, requesterId, donorId, type, status });
     res.status(201).json(notification);  // ✅ Send response
   } catch (err) {
     console.error('Error creating notification:', err);
@@ -101,8 +57,12 @@ exports.createNotificationHandler = async (req, res) => {
 // 3. Get pending notifications
 exports.getDonorNotifications = async (req, res) => {
   try {
-    const donorId = req.query.donorId;
-    const notifications = await Notification.find({ donorId: donorId, status: 'pending', type: 'request' });
+    const donorId = req.user?.uid;
+    if (!donorId) {
+      return res.status(401).json({ error: 'Unauthorized' });
+    }
+
+    const notifications = await Notification.find({ donorId, status: 'pending', type: 'request' });
     res.json(notifications);
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -165,11 +125,15 @@ exports.updateNotificationStatus = async (req, res) => {
 
 exports.getRequesterNotifications = async (req, res) => {
   try {
-    const { requesterId } = req.params;
+    const requesterId = req.user?.uid;
+    if (!requesterId) {
+      return res.status(401).json({ error: 'Unauthorized' });
+    }
+
     const notifications = await Notification.find({
       requesterId,
-      type: "confirmation",
-      status: "confirmed" // or other filters
+      type: 'confirmation',
+      status: 'confirmed' // or other filters
     }).sort({ timestamp: -1 });
 
     res.json(notifications);
@@ -181,9 +145,10 @@ exports.getRequesterNotifications = async (req, res) => {
 // GET: /api/notifications/request-counts?donorId=...
 exports.getRequestCounts = async (req, res) => {
   try {
-    const { donorId } = req.query;
-
-    if (!donorId) return res.status(400).json({ message: 'Missing donorId' });
+    const donorId = req.user?.uid;
+    if (!donorId) {
+      return res.status(401).json({ error: 'Unauthorized' });
+    }
 
     const pending = await Notification.countDocuments({ donorId, status: 'pending', type: 'request' });
     const approved = await Notification.countDocuments({ donorId, status: 'accepted', type: 'request' });
@@ -193,7 +158,7 @@ exports.getRequestCounts = async (req, res) => {
       approvedRequests: approved,
     });
   } catch (err) {
-    console.error("Failed to fetch request counts:", err);
+    console.error('Failed to fetch request counts:', err);
     res.status(500).json({ error: err.message });
   }
 };

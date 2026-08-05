@@ -25,8 +25,12 @@ const registerUser = async (req, res) => {
 const getUserById = async (req, res) => {
   try {
     const { uid } = req.params;
-    const user = await User.findOne({ uid });
 
+    if (req.user?.uid !== uid) {
+      return res.status(403).json({ message: 'Forbidden' });
+    }
+
+    const user = await User.findOne({ uid });
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
     }
